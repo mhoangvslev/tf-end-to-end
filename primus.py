@@ -56,10 +56,10 @@ class CTC_PriMuS:
             sample_fullpath = self.corpus_dirpath + '/' + sample_filepath + '/' + sample_filepath
 
             # IMAGE
-            if self.distortions:
-                sample_img = cv2.imread(sample_fullpath + '_distorted.jpg', False) # Grayscale is assumed
-            else:
-                sample_img = cv2.imread(sample_fullpath + '.png', False)  # Grayscale is assumed!
+            image_file = sample_fullpath + "_distorted.jpg" if self.distortions else sample_fullpath + '.png'
+            sample_img = cv2.imread(image_file, cv2.IMREAD_GRAYSCALE)
+            print(image_file)
+
             height = params['img_height']
             sample_img = ctc_utils.resize(sample_img,height)
             images.append(ctc_utils.normalize(sample_img))

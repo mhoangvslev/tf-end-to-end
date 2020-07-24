@@ -83,12 +83,12 @@ def ctc_crnn(params):
     rnn_hidden_units = params['rnn_units']
     rnn_hidden_layers = params['rnn_layers']
 
-    rnn_outputs, _ = tf.nn.bidirectional_dynamic_rnn(
+    rnn_outputs, _ = tf.compat.v1.nn.bidirectional_dynamic_rnn(
         tf.contrib.rnn.MultiRNNCell(
-            [tf.nn.rnn_cell.DropoutWrapper(tf.contrib.rnn.BasicLSTMCell(rnn_hidden_units), input_keep_prob=rnn_keep_prob)
+            [tf.compat.v1.nn.rnn_cell.DropoutWrapper(tf.contrib.rnn.BasicLSTMCell(rnn_hidden_units), input_keep_prob=rnn_keep_prob)
              for _ in range(rnn_hidden_layers)]),
         tf.contrib.rnn.MultiRNNCell(
-            [tf.nn.rnn_cell.DropoutWrapper(tf.contrib.rnn.BasicLSTMCell(rnn_hidden_units), input_keep_prob=rnn_keep_prob)
+            [tf.compat.v1.nn.rnn_cell.DropoutWrapper(tf.contrib.rnn.BasicLSTMCell(rnn_hidden_units), input_keep_prob=rnn_keep_prob)
              for _ in range(rnn_hidden_layers)]),
         features,
         dtype=tf.float32,
@@ -107,8 +107,8 @@ def ctc_crnn(params):
 
     # CTC Loss computation
     seq_len = tf.placeholder(tf.int32, [None], name='seq_lengths')
-    targets = tf.sparse_placeholder(dtype=tf.int32, name='target')
-    ctc_loss = tf.nn.ctc_loss(labels=targets, inputs=logits, sequence_length=seq_len, time_major=True)
+    targets = tf.compat.v1.sparse_placeholder(dtype=tf.int32, name='target')
+    ctc_loss = tf.compat.v1.nn.ctc_loss(labels=targets, inputs=logits, sequence_length=seq_len, time_major=True)
     loss = tf.reduce_mean(ctc_loss)
 
     # CTC decoding
